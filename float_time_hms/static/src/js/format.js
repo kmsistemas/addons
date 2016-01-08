@@ -1,9 +1,10 @@
-openerp.float_time_hms = function(instance){
+odoo.define('float_time_hms', function (require) {
+"use_strict";
 
+    var formats = require('web.formats');
 
-
-    original_format_value = instance.web.format_value;
-    instance.web.format_value = function (value, descriptor, value_if_empty) {
+    original_format_value = formats.format_value;
+    formats.format_value = function (value, descriptor, value_if_empty) {
         switch (descriptor.widget || descriptor.type || (descriptor.field && descriptor.field.type)) {
             case 'float_time':
                 var pattern = '%02d:%02d:%02d';
@@ -27,10 +28,10 @@ openerp.float_time_hms = function(instance){
                 return _.str.sprintf(pattern, hour, min, sec);
         }
         return original_format_value(value, descriptor, value_if_empty);
-    };
+    }
 
-    original_parse_value = instance.web.parse_value;
-    instance.web.parse_value = function (value, descriptor, value_if_empty) {
+    original_parse_value = formats.parse_value;
+    formats.parse_value = function (value, descriptor, value_if_empty) {
         switch (descriptor.widget || descriptor.type || (descriptor.field && descriptor.field.type)) {
             case 'float_time':
                 var factor = 1;
@@ -47,6 +48,6 @@ openerp.float_time_hms = function(instance){
                 return factor * (hours + (minutes / 60) + (seconds / 3600) + .0001);
         }
         return original_parse_value(value, descriptor, value_if_empty);
-    };
+    }
 
-};
+});
